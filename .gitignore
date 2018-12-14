@@ -1,0 +1,6 @@
+# python tmp file
+*.pyc
+# vim tmp file
+*.swp
+# capture files
+capture/

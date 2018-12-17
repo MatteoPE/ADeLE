@@ -1,1 +1,31 @@
-ADeLE: Architecture for Deep Learning at the Edge
+ADeLE: v1.0 README
+Updated Dec 17, 2018 by Alessandro Gaballo  
+
+All feedback appreciated to alessandro.gaballo@studenti.polito.it
+
+What is ADeLE
+================
+ADeLE is the system implementation of our Policy-based, Virtual Network Embedding Architecture, that use an asynchrnous implementation of the  protocol for Consensus-based Distributed virtual network Embedding (CADE). Details of the CADE protocol (formerly called CAD) can be found at http://csr.bu.edu/cad
+
+DISTRIBUTION
+================
+The distribution tree contains:
+  
+README.md
+      --this file  
+configs
+      --the file configurations for MinineXt and Quagga
+dataset_final
+      --the dataset used to train the LSTM, separated in each generation step  
+deep_learning  
+      --the Deep Learning models (DNN, LSTM)
+evaluation
+      --evaluations scripts and results for different metrics
+ryu
+      --ryu application to manage the switches and collect data
+second_eval
+      --additional evaluations
+trained_models
+      --trained models for both DNN and LSTM
+utils
+      --utils script

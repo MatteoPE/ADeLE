@@ -11,7 +11,7 @@ DISTRIBUTION
 ================
 The distribution tree contains:
   
-README.md
+README.txt
       --this file  
 configs
       --the file configurations for MinineXt and Quagga

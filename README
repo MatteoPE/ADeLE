@@ -25,7 +25,8 @@ deep_learning
 evaluation
       --evaluations scripts and results for different metrics
 offloading_architecture
-      --files for the offloading mechanism and the protocol definition (protobuf subdirectory). These files are a preliminary test to familiarize with ryu and test the protocol.
+      --files for the offloading mechanism and the protocol definition (protobuf subdirectory). 
+        These files are a preliminary test to familiarize with ryu and test the protocol.
 ryu
       --ryu application to manage the switches and collect data
 second_eval

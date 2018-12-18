@@ -1,11 +1,14 @@
 ADeLE: v1.0 README
-Updated Dec 17, 2018 by Alessandro Gaballo  
+Updated Dec 18, 2018 by Alessandro Gaballo  
 
 All feedback appreciated to alessandro.gaballo@studenti.polito.it
 
 What is ADeLE
 ================
-ADeLE is [...]
+ADeLE is an architecture that expands the classical notion of computation offloading by identifying the invariances of the edge
+offloading problem; in particular, we consider the problem of traffic offloading, i.e., the SDN-driven management mechanism
+to route traffic among processes involved in the offloading process.
+
 
 DISTRIBUTION
 ================
@@ -29,3 +32,17 @@ trained_models
       --trained models for both DNN and LSTM
 utils
       --utils script
+pair_dataset.py
+      --builds the dataset by combining the packet counter and the routing table in each run
+start.py
+      --starts the mininet network for the dataset generation
+topology.py
+      --mininext topology definition
+      
+      
+RUN
+================
+To generate the dataset, after setting the parameters in the two scripts to the desired values, run in separate shells:
+
+ryu-manager switchWithStats.py (from within the ryu directory)
+sudo python start.py

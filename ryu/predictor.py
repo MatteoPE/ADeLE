@@ -10,15 +10,15 @@ import random
 import sys
 from subprocess import Popen
 
-MODELS_DIR = '/home/mininet/miniNExT/examples/master_thesis/project/trained_models/lstm/'
-#MODELS_DIR = '/home/mininet/miniNExT/examples/master_thesis/project/trained_models/dnn/'
+MODELS_DIR = '/home/miniNExT/examples/master_thesis/project/trained_models/lstm/'
+#MODELS_DIR = '/home/miniNExT/examples/master_thesis/project/trained_models/dnn/'
 ROUTERS_NAMING = ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'ri1', 'ri2', 'ri3', 'ri4']
 
-ROUTER_CONF = '/home/mininet/miniNExT/examples/master_thesis/project/configs/interfaces'
+ROUTER_CONF = '/home/miniNExT/examples/master_thesis/project/configs/interfaces'
 SELECTED_T = ['r1_172_168_4_1', 'r2_172_168_4_2', 'r3_172_168_35_1','r4_172_168_35_1', 'r6_172_168_32_1']
 SELECTED_T = ['r1_172_168_3_1']
 
-ROUTES = '/home/mininet/miniNExT/examples/master_thesis/project/testing/run0/paths.txt'
+ROUTES = '/home/miniNExT/examples/master_thesis/project/testing/run0/paths.txt'
 ITERATIONS = 1
 SAMPLES = 200
 TARGETS = os.listdir(MODELS_DIR)
@@ -127,7 +127,7 @@ if __name__=='__main__':
     print('new connection from {:}'.format(listener.last_accepted))
     with open('mininet_dump', 'w+') as mn:
 
-        #mininet=Popen(['python', 'test_net.py'], cwd='/home/mininet/miniNExT/examples/master_thesis/project/', stdout=mn, stderr=mn)
+        #mininet=Popen(['python', 'test_net.py'], cwd='/home/miniNExT/examples/master_thesis/project/', stdout=mn, stderr=mn)
         k = 0
         iteration = 0
         with open(sys.argv[1], 'w+') as f:

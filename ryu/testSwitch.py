@@ -38,10 +38,10 @@ from multiprocessing.connection import Client
 EMPTY_COUNTER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
 ROUTERS_NAMING = ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'ri1', 'ri2', 'ri3', 'ri4']
 POLLING_INTERVAL = 1
-OUT_DIR = '/home/mininet/miniNExT/examples/master_thesis/project/'
-MODELS_DIR = '/home/mininet/miniNExT/examples/master_thesis/project/models_final/'
+OUT_DIR = '/home/miniNExT/examples/master_thesis/project/'
+MODELS_DIR = '/home/miniNExT/examples/master_thesis/project/models_final/'
 ITERATION = 15
-ROUTER_CONF = '/home/mininet/miniNExT/examples/master_thesis/project/configs/interfaces'
+ROUTER_CONF = '/home/miniNExT/examples/master_thesis/project/configs/interfaces'
 
 class EventMsg(event.EventBase):
     def __init__(self, msg):

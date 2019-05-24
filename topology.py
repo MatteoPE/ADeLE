@@ -7,7 +7,7 @@ from collections import namedtuple
 import pickle
 
 
-OUT_DIR='/home/mininet/miniNExT/examples/master_thesis/project/'
+OUT_DIR='/home/miniNExT/examples/master_thesis/project/'
 QuaggaHost = namedtuple("QuaggaHost", "name ip loIP")
 net = None
 OUTER = 6
@@ -20,10 +20,10 @@ class MyTopo(Topo):
         # Directory where this file / script is located"
         selfPath = os.path.dirname(os.path.abspath(
             inspect.getfile(inspect.currentframe())))  # script directory
-
+###################
         # Initialize a service helper for Quagga with default options
         quaggaSvc = QuaggaService(autoStop=False)
-
+###################
         # Path configurations for mounts
         quaggaBaseConfigPath = selfPath + '/configs/'
         
@@ -32,19 +32,19 @@ class MyTopo(Topo):
         # saving speed of each interface
         self.intf_speed = {}
         outer = self.createQuaggRing(OUTER, quaggaSvc, quaggaBaseConfigPath)
-        
+
         # inner = self.createQuaggRing(INNER, quaggaSvc, quaggaBaseConfigPath, r_name="ri{:d}", s_name="si{:d}")
         # test with different naming because of problem with contorller
         inner = self.createQuaggRing(INNER, quaggaSvc, quaggaBaseConfigPath, r_name="ri{:d}", count=OUTER, bw=IN_BW)
         
         # creating custom connections between inner and outer rings
-        self.addLinkWithSwitch(outer[0], inner[1], self.addSwitch("s11",protocols='OpenFlow13'))
+        self.addLinkWithSwitch(outer[0], inner[1], self.addSwitch("s11", protocols='OpenFlow13'))
         self.addLinkWithSwitch(outer[2], inner[1], self.addSwitch("s12", protocols='OpenFlow13'))
         self.addLinkWithSwitch(outer[2], inner[2], self.addSwitch("s13", protocols='OpenFlow13'))
         self.addLinkWithSwitch(outer[3], inner[3], self.addSwitch("s14", protocols='OpenFlow13'))
         self.addLinkWithSwitch(outer[5], inner[3], self.addSwitch("s15", protocols='OpenFlow13'))
         self.addLinkWithSwitch(outer[5], inner[0], self.addSwitch("s16", protocols='OpenFlow13'))
-        
+
         # saving mapping on file
         with open(OUT_DIR + 'switch_mapping.pkl', 'wb+') as f:
             pickle.dump(self.in_interface, f)

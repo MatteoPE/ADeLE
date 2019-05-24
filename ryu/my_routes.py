@@ -7,9 +7,9 @@ from collections import defaultdict
 import pickle
 import os
 
-ROUTES_FILE = '/home/mininet/miniNExT/util/routes.txt'
-ROUTER_CONF = '/home/mininet/miniNExT/examples/master_thesis/project/configs/interfaces'
-OUT_DIR = '/home/mininet/miniNExT/examples/master_thesis/project/'
+ROUTES_FILE = '/home/miniNExT/util/routes.txt'
+ROUTER_CONF = '/home/miniNExT/examples/master_thesis/project/configs/interfaces'
+OUT_DIR = '/home/miniNExT/examples/master_thesis/project/'
 
 class Net:
 
@@ -24,7 +24,7 @@ class Net:
         self.addr_rout = defaultdict()
         # contains the routing information: dst->next_hop
         self.routes = defaultdict(dict)
-        #os.system('cd ~mininet/miniNExT/util && bash ./getRoutingTable.sh && cd -')
+        #os.system('cd utils && bash ./getRoutingTable.sh && cd -')
 
     def parse_routes(self, routes_file, addr_file, save_mapping=False):
         # getting routers routing tables

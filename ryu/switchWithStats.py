@@ -30,39 +30,38 @@ import time
 import os
 
 
-EMPTY_COUNTER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
-POLLING_INTERVAL = 1 # frequency of the packet count retrieval
-OUT_DIR = '/home/mininet/miniNExT/examples/master_thesis/project/'
+EMPTY_COUNTER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+POLLING_INTERVAL = 1  # frequency of the packet count retrieval
+# OUT_DIR = '/home/miniNExT/examples/master_thesis/project/'
+OUT_DIR = '/home/miniNExT/examples/master_thesis/project/'
 DATASET_DIR = 'dataset_final'
-ITERATION = 15 # number of iteration for the dataset generation
+ITERATION = 15  # number of iteration for the dataset generation
 
 
 class SimpleSwitch13(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
-    
     def __init__(self, *args, **kwargs):
         super(SimpleSwitch13, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
         # saving all switches
         self.datapaths = set()
-        self.monitor = hub.spawn(self._get_stats)      
+        self.monitor = hub.spawn(self._get_stats)
         self.collector = hub.spawn(self.counter)
-        self.in_mapping = pickle.load(open(OUT_DIR + 'switch_mapping.pkl','rb'))
+        self.in_mapping = pickle.load(
+            open(OUT_DIR + 'switch_mapping.pkl', 'rb'))
         self.packet_count = self._init_pckt_count()
         self.stats = {}
 
-    
     def _init_pckt_count(self):
         # inverting saved dict to have the following dict {rx:{sy:0,sz:0}}
         inverted = defaultdict(dict)
-        for k,v in self.in_mapping.items():
+        for k, v in self.in_mapping.items():
             for r in v:
-                inverted[r][k]=0
+                inverted[r][k] = 0
 
         return dict(inverted)
 
-    
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
         datapath = ev.msg.datapath
@@ -81,7 +80,6 @@ class SimpleSwitch13(app_manager.RyuApp):
                                           ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
 
-    
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -97,7 +95,6 @@ class SimpleSwitch13(app_manager.RyuApp):
                                     match=match, instructions=inst)
         datapath.send_msg(mod)
 
-    
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
         # If you hit this you might want to increase
@@ -152,25 +149,24 @@ class SimpleSwitch13(app_manager.RyuApp):
         out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
                                   in_port=in_port, actions=actions, data=data)
         datapath.send_msg(out)
-        
+
         self.datapaths.add(datapath)
 
-
     # function responsible of the polling for the couter
+
     def _get_stats(self):
         while True:
             for dp in self.datapaths:
                 self.switch_stats(dp)
             hub.sleep(POLLING_INTERVAL)
 
-    
     # sending the openflow request for the stats
+
     def switch_stats(self, datapath):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         req = parser.OFPFlowStatsRequest(datapath)
         datapath.send_msg(req)
-
 
     # handling the reply to the stats request
     @set_ev_cls(ofp_event.EventOFPFlowStatsReply, MAIN_DISPATCHER)
@@ -179,37 +175,41 @@ class SimpleSwitch13(app_manager.RyuApp):
         datapath = msg.datapath
         body = ev.msg.body
         sw_name = 's' + str(datapath.id)
-        sw_mapping =  self.in_mapping[sw_name]
-        
+        sw_mapping = self.in_mapping[sw_name]
+
         # saving the switch id in the flows
         flows = [sw_name]
-        
-        for i,stat in enumerate(body):
+
+        for i, stat in enumerate(body):
             if 'in_port' in stat.match:
                 # for the first time when there are no old statistics
                 if sw_name not in self.stats:
-                    self.stats[sw_name]=body 
-                
+                    self.stats[sw_name] = body
+
                 for router in sw_mapping:
                     # checking if the port is the incoming port for that router
                     if sw_mapping[router] == stat.match['in_port']:
-                        #update count : current stats - previous stats for the specific router,switch,port triple
+                        # update count : current stats - previous stats for the
+                        # specific router,switch,port triple
                         try:
-                            self.packet_count[router][sw_name] = stat.packet_count - self.stats[sw_name][i].packet_count
+                            self.packet_count[router][sw_name] = stat.packet_count - \
+                                self.stats[sw_name][i].packet_count
                         except IndexError:
                             print_break_line()
                             print(stat)
                             print(router, sw_name, i)
                             print(self.stats[sw_name])
                             print_break_line()
-                flows.append('packet_count=%s in_port=%s'%(stat.packet_count, stat.match['in_port']))
-        
+                flows.append(
+                    'packet_count=%s in_port=%s' %
+                    (stat.packet_count, stat.match['in_port']))
+
         # only if the stats data structure has been already initialized and contains all the information
-        # if a switch has more than 2 connections the check on the lenght of the body needs to be updated (not 100% sure)
-        if sw_name in self.stats and len(body)==3:
-            self.stats[sw_name]=body 
-        
-    
+        # if a switch has more than 2 connections the check on the lenght of
+        # the body needs to be updated (not 100% sure)
+        if sw_name in self.stats and len(body) == 3:
+            self.stats[sw_name] = body
+
     def counter(self):
         i = 0
         while True and i < ITERATION:
@@ -218,43 +218,46 @@ class SimpleSwitch13(app_manager.RyuApp):
             cnt = 0
             # letting mininet creating the folders
             try:
-                with open(OUT_DIR + DATASET_DIR + '/run' +str(i)+ '/' + timestr + '_capture', 'w+') as f:
-        	        print('run {:} Capture file {:}_capture'.format(i, timestr))
+                with open(OUT_DIR + DATASET_DIR + '/run' + str(i) + '/' + timestr + '_capture', 'w+') as f:
+                    print(
+                        'run {:} Capture file {:}_capture'.format(
+                            i, timestr))
                     while True:
-	                    new = self._print_packet_count(file=f)
-	                    # checking if simulation has ended
+                        new = self._print_packet_count(file=f)
+                        # checking if simulation has ended
                         if new[1:] == old[1:] and sum(new[1:]) > 100:
-	                        cnt +=1
-                            # if the counter stays the same for several times, the simulation has ended
+                            cnt += 1
+                            # if the counter stays the same for several times,
+                            # the simulation has ended
                             if cnt > 5:
                                 print('Waiting for new run to start...')
                                 i += 1
                                 if i < ITERATION:
                                     time.sleep(70)
                                 break
-	                    else:
-                            cnt=0
-	                    old = new
-	                    time.sleep(POLLING_INTERVAL)
-	        
+                            else:
+                                cnt = 0
+                                old = new
+                                time.sleep(POLLING_INTERVAL)
+
             except IOError:
                 time.sleep(1)
                 continue
         print('capture ended')
-    
+
     def _print_packet_count(self, file=None):
         t = time.time()
         counter = [t]
         for r in sorted(self.packet_count):
             # print(t, r, sum(self.packet_count[r].values()))
             counter.append(sum(self.packet_count[r].values()))
-        print(counter) 
+        print(counter)
 
         if file and sum(counter[1:]) > 100:
             line = ' '.join(str(e) for e in counter)
-            file.write(line + '\n') 
+            file.write(line + '\n')
         return counter
 
 
 def print_break_line(char='*'):
-    print(char*75)
+    print(char * 75)

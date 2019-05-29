@@ -73,5 +73,5 @@ ryu-manager
 ```
 If some modules are missing,
 ```
-pip install <module>
+sudo pip install <module>
 ```

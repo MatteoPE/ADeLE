@@ -32,7 +32,7 @@ class MyTopo(Topo):
         # saving speed of each interface
         self.intf_speed = {}
 
-        routers = self.createTopologyFromConf(confFile)
+        routers = self.createTopologyFromConf(confFile, r_name="r{:d}", s_name="s{:d}")
 
         # saving mapping on file
         with open('switch_mapping.pkl', 'wb+') as f:
@@ -42,7 +42,7 @@ class MyTopo(Topo):
         with open('intf_speed.pkl', 'wb+') as f:
             pickle.dump(self.intf_speed, f)
 
-    def createTopologyFromConf(self, confFile):
+    def createTopologyFromConf(self, confFile, r_name, s_name):
         numRouters, links = readConfFile(confFile)
         routers = []
         switches = []
@@ -57,7 +57,7 @@ class MyTopo(Topo):
             quaggaSvcConfig = {'quaggaConfigPath': quaggaBaseConfigPath + r_name.format(i+1)}
             self.addNodeService(node=r_name.format(i+1), service=quaggaSvc, nodeConfig=quaggaSvcConfig)
             routers.append(quaggaContainer)
-            switches.append(self.addSwitch(s_name.format(count + i + 1),protocols='OpenFlow13'))
+            switches.append(self.addSwitch(s_name.format(i + 1),protocols='OpenFlow13'))
         
         for idx, l in links: 
             self.addLinkWithSwitch(routers[l[0]], routers[l[1]], switches[idx], bw)

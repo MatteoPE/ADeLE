@@ -21,7 +21,10 @@ class MyTopo(Topo):
         quaggaSvc = QuaggaService(autoStop=False)
 
         # Path configurations for mounts
-        os.mkdir(selfPath + '/configs/')
+        try:
+	    os.mkdir(selfPath + '/configs/')
+        except OSError:
+            pass
         quaggaBaseConfigPath = selfPath + '/configs/'
         
         # Initialize data structure to map each router with the port on the switch corresponding to incoming traffic

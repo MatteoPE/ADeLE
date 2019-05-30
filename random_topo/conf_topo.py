@@ -57,10 +57,11 @@ class MyTopo(Topo):
             quaggaSvcConfig = {'quaggaConfigPath': quaggaBaseConfigPath + r_name.format(i+1)}
             self.addNodeService(node=r_name.format(i+1), service=quaggaSvc, nodeConfig=quaggaSvcConfig)
             routers.append(quaggaContainer)
-            switches.append(self.addSwitch(s_name.format(i + 1),protocols='OpenFlow13'))
-        
-        for idx, l in links: 
-            self.addLinkWithSwitch(routers[l[0]], routers[l[1]], switches[idx], bw)
+                    
+        for idx, (r1, r2) in enumerate(links):
+            sw = self.addSwitch(s_name.format(idx), protocols='OpenFlow13')
+            switches.append(sw) 
+            self.addLinkWithSwitch(routers[r1], routers[r2], switches[idx], bw=None)
         return routers
     
     def addLinkWithSwitch(self, r1, r2, s, bw=None):

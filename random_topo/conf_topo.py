@@ -42,7 +42,7 @@ class MyTopo(Topo):
         with open('intf_speed.pkl', 'wb+') as f:
             pickle.dump(self.intf_speed, f)
 
-    def createTopologyFromConf(self, quaggaSvc, quaggaBaseConfigPath, confFile, r_name, s_name):
+    def createTopologyFromConf(self, confFile, quaggaSvc, quaggaBaseConfigPath, r_name, s_name):
         numRouters, links = readConfFile(confFile)
         routers = []
         switches = []

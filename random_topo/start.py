@@ -166,7 +166,7 @@ def is_valid_path(s, d):
     return True
 
 
-def setInterfaces(net, confFile):
+def setInterfaces(net, intfFile):
     # conf file: router interface address
     networks = {}
     zebra_conf = {}
@@ -174,7 +174,7 @@ def setInterfaces(net, confFile):
     with open('intf_speed.pkl', 'rb') as f:
         intf_speed = pickle.load(f)
 
-    with open(confFile) as conf:
+    with open(intfFile) as conf:
         for line in conf.readlines():
             params = line.strip()
             if params and params[0] == "#":

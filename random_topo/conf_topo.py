@@ -32,7 +32,7 @@ class MyTopo(Topo):
         # saving speed of each interface
         self.intf_speed = {}
 
-        routers = self.createTopologyFromConf(confFile, r_name="r{:d}", s_name="s{:d}")
+        routers = self.createTopologyFromConf(confFile, quaggaSvc, quaggaBaseConfigPath, r_name="r{:d}", s_name="s{:d}")
 
         # saving mapping on file
         with open('switch_mapping.pkl', 'wb+') as f:
@@ -42,7 +42,7 @@ class MyTopo(Topo):
         with open('intf_speed.pkl', 'wb+') as f:
             pickle.dump(self.intf_speed, f)
 
-    def createTopologyFromConf(self, confFile, r_name, s_name):
+    def createTopologyFromConf(self, quaggaSvc, quaggaBaseConfigPath, confFile, r_name, s_name):
         numRouters, links = readConfFile(confFile)
         routers = []
         switches = []

@@ -8,9 +8,9 @@ import pickle
 import os
 
 # test routes file
-ROUTES_FILE = '/home/miniNExT/util/routes.txt'
+ROUTES_FILE = '../utils/routes.txt'
 # test router conf
-ROUTER_CONF = '/home/miniNExT/examples/master_thesis/project/configs/interfaces'
+ROUTER_CONF = '../configs/interfaces'
 
 class Net:
 

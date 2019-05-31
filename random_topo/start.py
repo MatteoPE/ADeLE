@@ -59,6 +59,12 @@ def startNetwork():
 
     paths = routes.Net()
 
+    try:
+        os.mkdir(DATASET_DIR)
+    except OSError:
+        pass
+
+
     for i in range(ITERATION):
         try:
             os.mkdir(DATASET_DIR + '/run{:}'.format(i))
@@ -82,16 +88,18 @@ def startNetwork():
         info('** Configuring addresses on interfaces\n')
         setInterfaces(net, "configs/interfaces")
         
-        for s in net.switches():
-            print(s)
-
-        CLI(net)
-        # net.run(simulateTraffic, net, SIM_DURATION, i, paths)
+        #CLI(net)
+        net.run(simulateTraffic, topo, net, SIM_DURATION, i, paths)
         # cleaning the paths object for the next run
         paths.reset()
 
 
-def simulateTraffic(net, duration, iteration, paths):
+def simulateTraffic(topo, net, duration, iteration, paths):
+    
+    for sw in topo.list_s:
+        os.system("ovs-vsctl set bridge {:} protocols=OpenFlow10,OpenFlow12,OpenFlow13".format(sw))
+                    
+    
     info('***RUN {:}'.format(iteration))
     info('\n** Waiting for OSPF to converge\n')
     time.sleep(60)
@@ -100,12 +108,12 @@ def simulateTraffic(net, duration, iteration, paths):
 
     if os.system(
             'cd utils && bash getRoutingTable.sh && cd - > /dev/null') != 0:
-        error('Can\'t dump routing table, exiting...')
+        #error('Can\'t dump routing table, exiting...')
         exit(-1)
 
         # the paths obj contains all the newtork information, including all the
         # available paths and the routers configuration
-    paths.parse_routes(routes.ROUTES_FILE, routes.ROUTER_CONF)
+    paths.parse_routes(routes.ROUTES_FILE, routes.ROUTER_CONF, save_mapping=True)
     paths.get_paths()
     paths.save_paths(DATASET_DIR + '/run{:}/paths.txt'.format(iteration))
     valid = []

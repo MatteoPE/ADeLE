@@ -35,7 +35,7 @@ class MyTopo(Topo):
         self.IP_interface = []
         self.numSubnets = 0
 
-        routers = self.createTopologyFromConf(confFile, quaggaSvc, quaggaBaseConfigPath, r_name="r{:d}", s_name="s{:d}")
+        self.list_r, self.list_s = self.createTopologyFromConf(confFile, quaggaSvc, quaggaBaseConfigPath, r_name="r{:d}", s_name="s{:d}")
 
         # saving mapping on file
         with open('switch_mapping.pkl', 'wb+') as f:
@@ -66,10 +66,10 @@ class MyTopo(Topo):
             routers.append(quaggaContainer)
                     
         for idx, (r1, r2) in enumerate(links):
-            sw = self.addSwitch(s_name.format(idx), protocols='OpenFlow13')
+            sw = self.addSwitch(s_name.format(idx+1), protocols='OpenFlow13')
             switches.append(sw) 
             self.addLinkWithSwitch(routers[r1], routers[r2], switches[idx], bw=None)
-        return routers
+        return routers, switches
     
     def addLinkWithSwitch(self, r1, r2, s, bw=None):
         # start from 172.168.1.x

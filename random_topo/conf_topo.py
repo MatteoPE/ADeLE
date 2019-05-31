@@ -46,7 +46,7 @@ class MyTopo(Topo):
             pickle.dump(self.intf_speed, f)
 
         # saving ip addresses on file
-        with open('/configs/interfaces', 'w') as f:
+        with open('configs/interfaces', 'w') as f:
             f.write('\n'.join(self.IP_interface))
 
     def createTopologyFromConf(self, confFile, quaggaSvc, quaggaBaseConfigPath, r_name, s_name):
@@ -104,9 +104,10 @@ class MyTopo(Topo):
         return intf
 
     def addIPAddress(self, r1, r2, intf1, intf2, subnet):
-        ip1 = '{:} {:} 172:168:{:}:1'.format(r1, intf1, subnet)
-        ip2 = '{:} {:} 172:168:{:}:2'.format(r2, intf2, subnet)
-        self.IP_interface.append(ip1, ip2)
+        ip1 = '{:} {:} 172.168.{:}.1'.format(r1, intf1, subnet)
+        self.IP_interface.append(ip1)
+        ip2 = '{:} {:} 172.168.{:}.2'.format(r2, intf2, subnet)
+        self.IP_interface.append(ip2)
 
 def readConfFile(confFile):
     numRouters = 0

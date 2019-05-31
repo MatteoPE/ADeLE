@@ -35,13 +35,14 @@ sys.modules['mininet.util'] = mininet.util
 parser = argparse.ArgumentParser(description='Start data generation')
 parser.add_argument('--file',
                     type=str,
+                    default='10-16-5.txt',
                     help='Configuration file')
 args = parser.parse_args()
 CONFFILE = args.file
 
 # list of target for which iperf doesn't work (don't know the reason)
-blacklist = [('r2', 'ri3'), ('r2', 'ri4'), ('r3', 'r6'), ('r4', 'r1'),
-             ('r4', 'ri3'), ('r5', 'ri2'), ('r6', 'r3'), ('ri3', 'r5')]
+# blacklist = [('r2', 'ri3'), ('r2', 'ri4'), ('r3', 'r6'), ('r4', 'r1'),
+#             ('r4', 'ri3'), ('r5', 'ri2'), ('r6', 'r3'), ('ri3', 'r5')]
 
 DEF_PSW = 'zebra'
 REF_BANDWIDTH = 1000  # bw for OSPF cost calculation, goes in the ospf conf file
@@ -80,6 +81,9 @@ def startNetwork():
 
         info('** Configuring addresses on interfaces\n')
         setInterfaces(net, "configs/interfaces")
+        
+        for s in net.switches():
+            print(s)
 
         CLI(net)
         # net.run(simulateTraffic, net, SIM_DURATION, i, paths)
@@ -203,7 +207,7 @@ def setInterfaces(net, intfFile):
     createOSPFConfig(networks)
 
 
-def createOSPFConfing(networks):
+def createOSPFConfig(networks):
     for router in networks:
         with open(CONFIG_PATH + '/' + router + "/ospfd.conf", "w+") as conf:
             conf.write("hostname {:}\n".format(router))

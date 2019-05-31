@@ -31,6 +31,9 @@ class MyTopo(Topo):
         self.in_interface = {}
         # saving speed of each interface
         self.intf_speed = {}
+        # Initialize data structure to assign IP address to interfaces
+        self.IP_interface = []
+        self.numSubnets = 0
 
         routers = self.createTopologyFromConf(confFile, quaggaSvc, quaggaBaseConfigPath, r_name="r{:d}", s_name="s{:d}")
 
@@ -41,6 +44,10 @@ class MyTopo(Topo):
         # saving intf speed on file
         with open('intf_speed.pkl', 'wb+') as f:
             pickle.dump(self.intf_speed, f)
+
+        # saving ip addresses on file
+        with open('/configs/interfaces', 'w') as f:
+            f.write('\n'.join(self.IP_interface))
 
     def createTopologyFromConf(self, confFile, quaggaSvc, quaggaBaseConfigPath, r_name, s_name):
         numRouters, links = readConfFile(confFile)
@@ -65,6 +72,8 @@ class MyTopo(Topo):
         return routers
     
     def addLinkWithSwitch(self, r1, r2, s, bw=None):
+        # start from 172.168.1.x
+        self.numSubnets += 1
         if not bw:
             # from Ethernet 10Base-X to Gigabit Ethernet
             bw=randint(100, 800)
@@ -73,8 +82,9 @@ class MyTopo(Topo):
         # saving the port on the switch for incoming traffic on the specific router
         #self.in_interface.append("{:} {:} 2".format(r1, s))
         #self.in_interface.append("{:} {:} 1".format(r2, s))
-        self.addIntfSpeed(r1, bw)
-        self.addIntfSpeed(r2, bw)
+        intf1 = self.addIntfSpeed(r1, bw)
+        intf2 = self.addIntfSpeed(r2, bw)
+        self.addIPAddress(r1, r2, intf1, intf2, self.numSubnets)
 
         if s not in self.in_interface:
             self.in_interface[s]={}
@@ -84,12 +94,19 @@ class MyTopo(Topo):
 
     def addIntfSpeed(self, router, bw):
         i = 0
+        intf = ''
         while True:
             intf = '{:}-eth{:d}'.format(router, i)
             if intf.format(router, i) not in self.intf_speed:
                 self.intf_speed[intf] = bw * 1000
                 break
             i += 1
+        return intf
+
+    def addIPAddress(self, r1, r2, intf1, intf2, subnet):
+        ip1 = '{:} {:} 172:168:{:}:1'.format(r1, intf1, subnet)
+        ip2 = '{:} {:} 172:168:{:}:2'.format(r2, intf2, subnet)
+        self.IP_interface.append(ip1, ip2)
 
 def readConfFile(confFile):
     numRouters = 0

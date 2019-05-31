@@ -32,8 +32,6 @@ import os
 
 EMPTY_COUNTER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 POLLING_INTERVAL = 1  # frequency of the packet count retrieval
-# OUT_DIR = '/home/miniNExT/examples/master_thesis/project/'
-OUT_DIR = '/home/matteo/miniNExT/examples/master_thesis/project/'
 DATASET_DIR = 'dataset_final'
 ITERATION = 15  # number of iteration for the dataset generation
 
@@ -49,7 +47,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         self.monitor = hub.spawn(self._get_stats)
         self.collector = hub.spawn(self.counter)
         self.in_mapping = pickle.load(
-            open(OUT_DIR + 'switch_mapping.pkl', 'rb'))
+            open('../switch_mapping.pkl', 'rb'))
         self.packet_count = self._init_pckt_count()
         self.stats = {}
 
@@ -218,7 +216,7 @@ class SimpleSwitch13(app_manager.RyuApp):
             cnt = 0
             # letting mininet creating the folders
             try:
-                with open(OUT_DIR + DATASET_DIR + '/run' + str(i) + '/' + timestr + '_capture', 'w+') as f:
+                with open(DATASET_DIR + '/run' + str(i) + '/' + timestr + '_capture', 'w+') as f:
                     print(
                         'run {:} Capture file {:}_capture'.format(
                             i, timestr))

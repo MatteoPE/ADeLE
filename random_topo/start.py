@@ -18,7 +18,7 @@ from mininext.net import MiniNExT
 from mininext.cli import CLI
 from mininet.link import TCLink
 from mininet.log import setLogLevel, info
-from mininet.node import RemoteController
+from mininet.node import RemoteController, OVSKernelSwitch
 from mininet.util import dumpNodeConnections
 # import sys
 import atexit
@@ -78,13 +78,14 @@ def startNetwork():
 
         info('** Starting the network\n')
         global net
-        net = MiniNExT(topo, controller=None, link=TCLink)
-        c = net.addController(
-            'c0',
-            controller=RemoteController,
-            ip='127.0.0.1',
-            port=6633)
-
+        net = MiniNExT(topo, controller=None, link=TCLink, switch=OVSKernelSwitch)
+        # c = net.addController(
+        #     'c0',
+        #     controller=RemoteController,
+        #     ip='127.0.0.1',
+        #     port=6633)
+        c = RemoteController('c0', ip='127.0.0.1', port=6633)
+        net.addController(c)
         info('** Configuring addresses on interfaces\n')
         setInterfaces(net, "configs/interfaces")
         
@@ -98,8 +99,8 @@ def simulateTraffic(topo, net, duration, iteration, paths):
     
     for sw in topo.list_s:
         os.system("ovs-vsctl set bridge {:} protocols=OpenFlow10,OpenFlow12,OpenFlow13".format(sw))
-                    
-    
+    CLI(net)                   
+    return
     info('***RUN {:}'.format(iteration))
     info('\n** Waiting for OSPF to converge\n')
     time.sleep(60)

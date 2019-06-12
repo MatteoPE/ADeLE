@@ -20,7 +20,6 @@ from mininet.link import TCLink
 from mininet.log import setLogLevel, info
 from mininet.node import RemoteController, OVSKernelSwitch
 from mininet.util import dumpNodeConnections
-# import sys
 import atexit
 import itertools
 import argparse
@@ -46,7 +45,7 @@ CONFFILE = args.file
 
 DEF_PSW = 'zebra'
 REF_BANDWIDTH = 1000  # bw for OSPF cost calculation, goes in the ospf conf file
-SIM_DURATION = 1200  # seconds of traffic simulation duration
+SIM_DURATION = 120  # seconds of traffic simulation duration
 TRAFFIC_PROB = 0.65  # probability of sending traffic between a pair of routers
 ITERATION = 1  # number of iteration for the dataset generation
 DATASET_DIR = 'dataset_final'
@@ -78,14 +77,13 @@ def startNetwork():
 
         info('** Starting the network\n')
         global net
-        net = MiniNExT(topo, controller=None, link=TCLink, switch=OVSKernelSwitch)
-        # c = net.addController(
+        #net = MiniNExT(topo, controller=None, link=TCLink, switch=OVSKernelSwitch)
+        #c = net.addController(
         #     'c0',
         #     controller=RemoteController,
         #     ip='127.0.0.1',
         #     port=6633)
-        c = RemoteController('c0', ip='127.0.0.1', port=6633)
-        net.addController(c)
+        net = MiniNExT(topo, controller=RemoteController, link=TCLink, switch=OVSKernelSwitch)
         info('** Configuring addresses on interfaces\n')
         setInterfaces(net, "configs/interfaces")
         
@@ -99,8 +97,8 @@ def simulateTraffic(topo, net, duration, iteration, paths):
     
     for sw in topo.list_s:
         os.system("ovs-vsctl set bridge {:} protocols=OpenFlow10,OpenFlow12,OpenFlow13".format(sw))
-    CLI(net)                   
-    return
+   # CLI(net)                   
+   # return
     info('***RUN {:}'.format(iteration))
     info('\n** Waiting for OSPF to converge\n')
     time.sleep(60)
@@ -119,11 +117,11 @@ def simulateTraffic(topo, net, duration, iteration, paths):
     paths.save_paths(DATASET_DIR + '/run{:}/paths.txt'.format(iteration))
     valid = []
     with open('addresses.pkl', 'rb') as f:
-            # contains the addresses of each router
+        # contains the addresses of each router
         rout_addr = pickle.load(f)
 
     with open('addr_rout.pkl', 'rb') as f:
-            # contains the router of each address
+        # contains the router of each address
         addr_rout = pickle.load(f)
 
         # starting the iperf server on all the routers
@@ -173,8 +171,8 @@ def is_valid_path(s, d):
     if 'i' in s or 'i' in d:
         return False
 
-    if (s, d) in blacklist:
-        return False
+ #   if (s, d) in blacklist:
+  #      return False
 
     return True
 
@@ -239,7 +237,7 @@ def createZebraConfig(zebra_conf):
                 conf.write("\tip address {:}/24\n".format(addr))
                 conf.write("\tbandwidth {:d}\n".format(bw))
                 conf.write("\tlink-detect\n\n")
-
+        os.system('cp debian.conf daemons {:}/{:}'.format(CONFIG_PATH, router))
 
 # get network address from host, to be implemented
 def getNetwork(address, prefix):

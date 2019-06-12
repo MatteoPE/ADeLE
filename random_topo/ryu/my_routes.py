@@ -8,9 +8,9 @@ import pickle
 import os
 
 # test routes file
-ROUTES_FILE = '../utils/routes.txt'
+ROUTES_FILE = 'utils/routes.txt'
 # test router conf
-ROUTER_CONF = '../configs/interfaces'
+ROUTER_CONF = 'configs/interfaces'
 
 class Net:
 
@@ -54,10 +54,10 @@ class Net:
         self.addr_rout=invert_dict(self.addresses)
         #self.get_path('r1', '172.168.4.2')
         if save_mapping:
-            with open('../addresses.pkl', 'wb') as f:
+            with open('addresses.pkl', 'wb') as f:
                 pickle.dump(self.addresses, f)
 
-            with open('../addr_rout.pkl', 'wb') as f:
+            with open('addr_rout.pkl', 'wb') as f:
                 pickle.dump(self.addr_rout, f)
 
     def get_path(self, src_router, dst_addr):

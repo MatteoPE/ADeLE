@@ -32,8 +32,8 @@ import os
 
 EMPTY_COUNTER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 POLLING_INTERVAL = 1  # frequency of the packet count retrieval
-DATASET_DIR = 'dataset_final'
-ITERATION = 15  # number of iteration for the dataset generation
+DATASET_DIR = '../dataset_final'
+ITERATION = 1  # number of iteration for the dataset generation
 
 
 class SimpleSwitch13(app_manager.RyuApp):
@@ -220,9 +220,9 @@ class SimpleSwitch13(app_manager.RyuApp):
                     print(
                         'run {:} Capture file {:}_capture'.format(
                             i, timestr))
+                    #started = False
                     while True:
                         new = self._print_packet_count(file=f)
-                        # checking if simulation has ended
                         if new[1:] == old[1:] and sum(new[1:]) > 100:
                             cnt += 1
                             # if the counter stays the same for several times,
@@ -233,10 +233,10 @@ class SimpleSwitch13(app_manager.RyuApp):
                                 if i < ITERATION:
                                     time.sleep(70)
                                 break
-                            else:
-                                cnt = 0
-                                old = new
-                                time.sleep(POLLING_INTERVAL)
+                        else:
+                            cnt = 0
+                        old = new
+                        time.sleep(POLLING_INTERVAL)
 
             except IOError:
                 time.sleep(1)
@@ -255,7 +255,6 @@ class SimpleSwitch13(app_manager.RyuApp):
             line = ' '.join(str(e) for e in counter)
             file.write(line + '\n')
         return counter
-
-
+    
 def print_break_line(char='*'):
     print(char * 75)

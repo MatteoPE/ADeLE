@@ -4,3 +4,7 @@
 *.swp
 # capture files
 capture/
+random_topo/configs
+*.pkl
+random_topo/*.pkl
+random_topo/*.txt

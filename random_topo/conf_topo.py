@@ -48,6 +48,7 @@ class MyTopo(Topo):
         # saving ip addresses on file
         with open('configs/interfaces', 'w') as f:
             f.write('\n'.join(self.IP_interface))
+            f.write('\n')
 
     def createTopologyFromConf(self, confFile, quaggaSvc, quaggaBaseConfigPath, r_name, s_name):
         numRouters, links = readConfFile(confFile)
@@ -68,7 +69,7 @@ class MyTopo(Topo):
         for idx, (r1, r2) in enumerate(links):
             sw = self.addSwitch(s_name.format(idx+1), protocols='OpenFlow13')
             switches.append(sw) 
-            self.addLinkWithSwitch(routers[r1], routers[r2], switches[idx], bw=None)
+            self.addLinkWithSwitch(routers[r1], routers[r2], sw, bw=None)
         return routers, switches
     
     def addLinkWithSwitch(self, r1, r2, s, bw=None):

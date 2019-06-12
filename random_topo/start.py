@@ -45,9 +45,9 @@ CONFFILE = args.file
 
 DEF_PSW = 'zebra'
 REF_BANDWIDTH = 1000  # bw for OSPF cost calculation, goes in the ospf conf file
-SIM_DURATION = 120  # seconds of traffic simulation duration
+SIM_DURATION = 1200  # seconds of traffic simulation duration
 TRAFFIC_PROB = 0.65  # probability of sending traffic between a pair of routers
-ITERATION = 1  # number of iteration for the dataset generation
+ITERATION = 15  # number of iteration for the dataset generation
 DATASET_DIR = 'dataset_final'
 CONFIG_PATH = "configs"
 net = None

@@ -33,7 +33,7 @@ import os
 EMPTY_COUNTER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 POLLING_INTERVAL = 1  # frequency of the packet count retrieval
 DATASET_DIR = '../dataset_final'
-ITERATION = 1  # number of iteration for the dataset generation
+ITERATION = 15  # number of iteration for the dataset generation
 
 
 class SimpleSwitch13(app_manager.RyuApp):

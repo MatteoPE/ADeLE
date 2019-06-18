@@ -47,7 +47,7 @@ DEF_PSW = 'zebra'
 REF_BANDWIDTH = 1000  # bw for OSPF cost calculation, goes in the ospf conf file
 SIM_DURATION = 1200  # seconds of traffic simulation duration
 TRAFFIC_PROB = 0.65  # probability of sending traffic between a pair of routers
-ITERATION = 15  # number of iteration for the dataset generation
+ITERATION = 15 # number of iteration for the dataset generation
 DATASET_DIR = 'dataset_final'
 CONFIG_PATH = "configs"
 net = None
@@ -91,7 +91,8 @@ def startNetwork():
         net.run(simulateTraffic, topo, net, SIM_DURATION, i, paths)
         # cleaning the paths object for the next run
         paths.reset()
-
+ #       os.system('mn -c')
+        time.sleep(10)
 
 def simulateTraffic(topo, net, duration, iteration, paths):
     

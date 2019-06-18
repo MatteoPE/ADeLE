@@ -71,7 +71,7 @@ def is_connected(edges):
     return True
 
 if __name__ == '__main__':
-    filename = "{}-{}-{}.txt".format(V, MAX_E, str(ALPHA).replace('0.',''))
+    filename = "{}-{}-{}.txt".format(V, MAX_E, str(ALPHA).replace('.',''))
     with open(filename, 'w') as f:
         f.write("{}\n".format(V))
         edges = generate_edges()

@@ -140,7 +140,8 @@ if __name__=='__main__':
         #mininet=Popen(['python', 'test_net.py'], cwd='/home/miniNExT/examples/master_thesis/project/', stdout=mn, stderr=mn)
         k = 0
         iteration = 0
-        with open(sys.argv[1], 'w+') as f:
+        with open(os.path.join(OUT_DIR, 'output.txt'), 'w+') as f:
+        #with open(sys.argv[1], 'w+') as f:
             while iteration < ITERATIONS:
                 if os.path.isfile(ROUTES):
                     print('Predictions started')

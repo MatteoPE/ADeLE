@@ -104,13 +104,10 @@ def startNetwork():
 def testRouter(net):
     info('*** Test\n')
     for r in net.hosts:
-        r.cmdPrint('zebra -f configs/{:}/zebra.conf -d \
-            -i configs/{:}/zebra.pid \
-            > configs/{:}/zebra.log 2>&1'.format(r, r, r))
+        r.cmdPrint('sysctl net.ipv4.ip_forward=1')
+        r.cmdPrint('zebra -f configs/{:}/zebra.conf -d -i configs/{:}/zebra.pid > configs/{:}/zebra.log 2>&1'.format(r, r, r))
         r.waitOutput()
-        r.cmdPrint('ospfd -f configs/{:}/ospfd.conf -d \
-            -i configs/{:}/ospfd.pid \
-            > configs/{:}/ospfd.log 2>&1'.format(r, r, r))
+        r.cmdPrint('ospfd -f configs/{:}/ospfd.conf -d -i configs/{:}/ospfd.pid > configs/{:}/ospfd.log 2>&1'.format(r, r, r))
         r.waitOutput()
     time.sleep(60)
 
@@ -242,7 +239,7 @@ def createOSPFConfig(networks):
         OSPF_path = CONFIG_PATH + '/' + router + "/ospfd.conf"
         with open(OSPF_path, "w+") as conf:
             conf.write("hostname {:}\n".format(router))
-            conf.write("\nlog file /var/log/quagga/{:}.log\n".format(router))
+            conf.write("\nlog file {:}/{:}/ospfd.log\n".format(CONFIG_PATH, router))
             conf.write("\nrouter ospf\n")
             conf.write(
                 "auto-cost reference-bandwidth {:}\n".format(REF_BANDWIDTH))
@@ -281,7 +278,7 @@ def stopNetwork():
         info('** Tearing down Quagga network\n')
         net.stop()
     os.system("killall -9 ospfd zebra quagga")
-   # os.system("rm -rf configs/*")
+    os.system("rm -rf configs/*")
     os.system("mn -c >/dev/null 2>&1")
 
 

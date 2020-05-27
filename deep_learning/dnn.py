@@ -15,8 +15,9 @@ import time
 import os
 from sklearn.model_selection import train_test_split
 MODEL_DIR = './../models_final/'
-TRAINED_MODEL_DIR = './../trained_models/dnn/'
+TRAINED_MODEL_DIR = './../trained_models_new/dnn/'
 
+os.system('mkdir -p {:}'.format(TRAINED_MODEL_DIR))
 
 # In[2]:
 
